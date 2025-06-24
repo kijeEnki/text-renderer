@@ -1,4 +1,6 @@
 const fonts = {
+    "custom by name": null,
+    "custom by url": null,
     "sitelen pona fonts": null,
     "sitelen seli kiwen": "url(fonts/sitelenselikiwenmonoasuki.ttf)",
     "fonts by sil": null,
@@ -8,6 +10,8 @@ const fonts = {
     "miscellaneous": null,
     "system font stack": 'local(-apple-system), local(BlinkMacSystemFont), local("Segoe UI"), local(Roboto), local("Helvetica Neue"), local(Arial), local("Noto Sans"), local("Liberation Sans"), local(sans-serif), local("Apple Color Emoji"), local("Segoe UI Emoji"), local("Segoe UI Symbol"), local("Noto Color Emoji")'
 }
+
+console.table(fonts);
 
 function drawtext() {
     const text = $("#text").val();
@@ -36,8 +40,10 @@ function drawtext() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    document.fonts.load(`${size}px '${font}'`, text).then(() => {
-        ctx.font = `${size}px '${font}'`;
+    let fontString = `${size}px "${font}", sans-serif`;
+
+    document.fonts.load(fontString, text).then(() => {
+        ctx.font = fontString;
 
         const lines = text.split("\n");
         const metricsList = lines.map(line => ctx.measureText(line));
@@ -63,7 +69,7 @@ function drawtext() {
         ctx.fillStyle = bg;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        ctx.font = `${size}px '${font}'`;
+        ctx.font = fontString;
         ctx.fillStyle = fg;
 
         lines.forEach((line, i) => {
@@ -85,14 +91,53 @@ function drawtext() {
 
         image.src = canvas.toDataURL("image/png");
         hidden.removeClass("d-none");
+    }).catch(error => {
+        console.error("error loading font!! here’s more info:");
+        console.error(error);
+        alert("can’t load font. try using another one.")
+
+        let renderButton = $("#render");
+        renderButton.prop("disabled", false);
+        renderButton.html("render!");
     })
+}
+
+function checkIfCustomFont() {
+    const fontSelector = $("#font");
+    const customFont = $("#customFont");
+
+    if (fontSelector.val().startsWith("custom")) {
+        $("#customFontGroup").removeClass("d-none");
+    } else {
+        $("#customFontGroup").addClass("d-none");
+    }
+
+    customFont.change(() => {
+        if (fontSelector.val() === "custom by name") {
+            fonts["custom by name"] = `local("${customFont.val()}")`;
+        }
+        if (fontSelector.val() === "custom by url") {
+            fonts["custom by url"] = `url("${customFont.val()}")`;
+        }
+        gencss();
+    });
+}
+
+function gencss() {
+    let css = ""
+    for (const font in fonts) {
+        if (fonts[font] !== null) {
+            css += `@font-face { font-family: "${font}"; src: ${fonts[font]}; }\n`;
+        }
+    }
+    $("#style").text(css);
 }
 
 function managefonts() {
     $("#font").empty();
-    let css = ""
+    gencss();
     for (const font in fonts) {
-        if (fonts[font] === null) {
+        if ((fonts[font] === null) && !(font.startsWith("custom"))) {
             $("#font").append(
                 `<option disabled>        ${font}        </option>`
             )
@@ -100,15 +145,15 @@ function managefonts() {
             $("#font").append(
                 `<option value="${font}">${font}</option>`
             )
-            css += `@font-face { font-family: "${font}"; src: ${fonts[font]}; }\n`;
         }
     }
-    $("#style").text(css);
 }
 
 function applyfuncs() {
-    managefonts()
+    managefonts();
+    checkIfCustomFont();
     $("#render").click(drawtext);
+    $("#font").change(checkIfCustomFont);
 }
 
 $(document).ready(applyfuncs);
