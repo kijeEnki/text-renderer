@@ -1,10 +1,10 @@
 const fonts = {
     "sitelen pona fonts": null,
-    "sitelen seli kiwen": "url(/fonts/sitelenselikiwenmonoasuki.ttf)",
+    "sitelen seli kiwen": "url(fonts/sitelenselikiwenmonoasuki.ttf)",
     "fonts by sil": null,
-    "andika": "url(/fonts/Andika-Regular.ttf)",
-    "charis sil": "url(/fonts/CharisSIL-Regular.ttf)",
-    "doulos sil": "url(/fonts/DoulosSIL-Regular.ttf)",
+    "andika": "url(fonts/Andika-Regular.ttf)",
+    "charis sil": "url(fonts/CharisSIL-Regular.ttf)",
+    "doulos sil": "url(fonts/DoulosSIL-Regular.ttf)",
     "miscellaneous": null,
     "system font": 'local(-apple-system), local(BlinkMacSystemFont), local("Segoe UI"), local(Roboto), local("Helvetica Neue"), local(Arial), local("Noto Sans"), local("Liberation Sans"), local(sans-serif), local("Apple Color Emoji"), local("Segoe UI Emoji"), local("Segoe UI Symbol"), local("Noto Color Emoji")'
 }
