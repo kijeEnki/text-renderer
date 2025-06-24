@@ -6,20 +6,27 @@ const fonts = {
     "charis sil": "url(fonts/CharisSIL-Regular.ttf)",
     "doulos sil": "url(fonts/DoulosSIL-Regular.ttf)",
     "miscellaneous": null,
-    "system font": 'local(-apple-system), local(BlinkMacSystemFont), local("Segoe UI"), local(Roboto), local("Helvetica Neue"), local(Arial), local("Noto Sans"), local("Liberation Sans"), local(sans-serif), local("Apple Color Emoji"), local("Segoe UI Emoji"), local("Segoe UI Symbol"), local("Noto Color Emoji")'
+    "system font stack": 'local(-apple-system), local(BlinkMacSystemFont), local("Segoe UI"), local(Roboto), local("Helvetica Neue"), local(Arial), local("Noto Sans"), local("Liberation Sans"), local(sans-serif), local("Apple Color Emoji"), local("Segoe UI Emoji"), local("Segoe UI Symbol"), local("Noto Color Emoji")'
 }
 
 function drawtext() {
-    let text = $("#text").val();
-    let fg = $("#fg").val();
-    let bg = $("#bg").val();
-    let renderButton = $("#render");
+    const text = $("#text").val();
+    const font = $("#font").val();
+    const fg = $("#fg").val();
+    const bg = $("#bg").val();
+    const size = parseInt($("#size").val()) > 0 ? parseInt($("#size").val()) : 48;
+    const pad = parseInt($("#pad").val()) >= 0 ? parseInt($("#pad").val()) : 10;
+    const spacing = parseFloat($("#spacing").val()) >= 0 ? parseFloat($("#spacing").val()) + 1.0 : 1.1;
+    const align = $("#align").val();
+    const metricsMode = $("#metricsMode").val();
+
+    const hidden = $("#results");
 
     const canvas = $("#canvas")[0];
     const ctx = canvas.getContext("2d");
 
-    const font = $("#font").val();
-    const size = $("#size").val();
+    const image = $("#image")[0];
+    let renderButton = $("#render");
 
     renderButton.prop("disabled", true);
     renderButton.html(
@@ -35,14 +42,23 @@ function drawtext() {
         const lines = text.split("\n");
         const metricsList = lines.map(line => ctx.measureText(line));
 
-        const maxAscent = Math.max(...metricsList.map(m => m.fontBoundingBoxAscent));
-        const maxDescent = Math.max(...metricsList.map(m => m.fontBoundingBoxDescent));
-        const lineHeight = (maxAscent + maxDescent) * 1.1;
+        let maxAscent;
+        let maxDescent;
+
+        if (metricsMode === "font") {
+            maxAscent = Math.max(...metricsList.map(m => m.fontBoundingBoxAscent));
+            maxDescent = Math.max(...metricsList.map(m => m.fontBoundingBoxDescent));
+        } else if (metricsMode === "actual") {
+            maxAscent = Math.max(...metricsList.map(m => m.actualBoundingBoxAscent));
+            maxDescent = Math.max(...metricsList.map(m => m.actualBoundingBoxDescent));
+        }
+
+        const lineHeight = (maxAscent + maxDescent) * spacing;
 
         const maxWidth = Math.max(...metricsList.map(m => m.width));
 
-        canvas.width = Math.ceil(maxWidth + 20);
-        canvas.height = Math.ceil(lines.length * lineHeight + 20);
+        canvas.width = Math.ceil(maxWidth + 2 * pad);
+        canvas.height = Math.ceil(lines.length * lineHeight + 2 * pad);
 
         ctx.fillStyle = bg;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -51,16 +67,25 @@ function drawtext() {
         ctx.fillStyle = fg;
 
         lines.forEach((line, i) => {
-            const y = 10 + maxAscent + i * lineHeight;
-            ctx.fillText(line, 10, y);
+            const y = pad + maxAscent + i * lineHeight;
+            if (align === "left") {
+                ctx.textAlign = "left";
+                ctx.fillText(line, pad, y);
+            } else if (align === "center") {
+                ctx.textAlign = "center";
+                ctx.fillText(line, canvas.width / 2, y);
+            } else if (align === "right") {
+                ctx.textAlign = "right";
+                ctx.fillText(line, canvas.width - pad, y);
+            }
         })
 
         renderButton.prop("disabled", false);
         renderButton.html("render!");
+
+        image.src = canvas.toDataURL("image/png");
+        hidden.removeClass("d-none");
     })
-
-    console.log(text);
-
 }
 
 function managefonts() {
@@ -69,14 +94,14 @@ function managefonts() {
     for (const font in fonts) {
         if (fonts[font] === null) {
             $("#font").append(
-                `<option disabled>        ${font}</option>`
+                `<option disabled>        ${font}        </option>`
             )
         } else {
             $("#font").append(
                 `<option value="${font}">${font}</option>`
             )
+            css += `@font-face { font-family: "${font}"; src: ${fonts[font]}; }\n`;
         }
-        css += `@font-face { font-family: "${font}"; src: ${fonts[font]}; }\n`;
     }
     $("#style").text(css);
 }

@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <script src="jquery-3.7.1.min.js"></script>
     <script src="rendertext.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
     <title>text renderer</title>
     <style id="style"></style>
 </head>
@@ -26,15 +27,49 @@
                                 <label for="text">text for rendering (can be multiline)</label>
                                 <textarea autocapitalize="none" autocorrect="off" autocomplete="off" required spellcheck="off" class="form-control" id="text"></textarea>
                             </div>
-                            <div class="form-group form-row">
-                                <select class="form-control col-8" id="font">
+                            <div class="form-group row">
+                                <label class="col-sm-6" for="font">font</label>
+                                <select class="form-control col-sm-6" id="font">
                                     <option>wait for the javascript to load…</option>
                                 </select>
-                                <input type="color" class="form-control col-1" id="fg" value="#000000">
-                                <input type="color" class="form-control col-1" id="bg" value="#ffffff">
-                                <input type="number" class="form-control col-2" id="size" value="48" placeholder="48">
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-6" for="fg">text color</label>
+                                <input type="color" class="form-control col-sm-6" id="fg" value="#000000">
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-6" for="bg">background color</label>
+                                <input type="color" class="form-control col-sm-6" id="bg" value="#ffffff">
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-6" for="size">size, px</label>
+                                <input type="number" class="form-control col-sm-6" id="size" value="48" placeholder="48" min="0">
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-6" for="pad">padding, px</label>
+                                <input type="number" class="form-control col-sm-6" id="pad" value="10" placeholder="10" min="0">
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-6" for="spacing">line spacing, multiple of font size</label>
+                                <input type="number" class="form-control col-sm-6" id="spacing" value="0.1" placeholder="0.1" min="0" step="0.01">
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-6" for="align">alignment</label>
+                                <select class="form-control col-sm-6" id="align">
+                                    <option value="left">left align</option>
+                                    <option value="center">center align</option>
+                                    <option value="right">right align</option>
+                                </select>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-6" for="metricsMode">metrics mode</label>
+                                <select class="form-control col-sm-6" id="metricsMode">
+                                    <option value="font">font metrics, consistent across characters</option>
+                                    <option value="actual">“actual” metrics, depend on the rendered text</option>
+                                </select>
                             </div>
                         </form>
+                        <hr>
                         <button class="btn btn-primary" id="render">
                             render!
                         </button>
@@ -43,10 +78,14 @@
             </div>
 
             <div class="col-lg-8 col-md-6">
-                <canvas id="canvas" class="border rounded">
-                    <div class="alert alert-danger">your browser does not support javascript. this page will not work.</div>
-                </canvas>
-                <p class="lead">to save the resulting image, long-press it (mobile) or right-click it (desktop).</p>
+                <div class="d-none" id="results">
+                    <canvas id="canvas" class="border rounded d-block mx-auto img-fluid">
+                        <div class="alert alert-danger">your browser does not support javascript. this page will not work.</div>
+                    </canvas>
+                    <image id="image" class="border rounded d-block mx-auto img-fluid" src=""></image>
+                    <hr>
+                    <p>the first image is the actual <code>&lt;canvas&gt;</code> output. the second image is the output as a downloadable image.</p>
+                </div>
             </div>
         </div>
     </div>
