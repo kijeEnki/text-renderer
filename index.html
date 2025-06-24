@@ -5,36 +5,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <script src="jquery-3.7.1.min.js"></script>
     <script src="rendertext.js"></script>
     <title>text renderer</title>
+    <style id="style"></style>
 </head>
 
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-lg-4 col-md-6">
                 <div class="jumbotron">
                     <h1 class="display-4">text renderer</h1>
                     <p class="lead">type some text and then press the big button.</p>
                 </div>
-                <form class="card">
+                <div class="card">
                     <div class="card-body">
-                        <div class="form-group">
-                            <label for="text">text for rendering (can be multiline)</label>
-                            <textarea autocapitalize="none" autocorrect="off" autocomplete="off" required spellcheck="off" class="form-control" id="text"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="font">font</label>
-                            <select class="form-control" id="font">
-                                <option>wait for the javascript to load…</option>
-                            </select>
-                        </div>
-                        <input type="submit" class="btn btn-primary" value="render!" id="render">
+                        <form>
+                            <div class="form-group">
+                                <label for="text">text for rendering (can be multiline)</label>
+                                <textarea autocapitalize="none" autocorrect="off" autocomplete="off" required spellcheck="off" class="form-control" id="text"></textarea>
+                            </div>
+                            <div class="form-group form-row">
+                                <label for="font" class="col">font</label>
+                                <select class="form-control col" id="font">
+                                    <option>wait for the javascript to load…</option>
+                                </select>
+                            </div>
+                            <div class="form-group form-row">
+                                <label for="fg" class="col">text color</label>
+                                <input type="color" class="form-control col" id="fg">
+                            </div>
+                            <div class="form-group form-row">
+                                <label for="size" class="col">font size</label>
+                                <input type="number" class="form-control col" id="size" value="48">
+                            </div>
+                        </form>
+                        <button class="btn btn-primary" id="render">
+                            render!
+                        </button>
                     </div>
-                </form>
+                </div>
             </div>
-            <div class="col-sm-6">
-                <canvas id="canvas" class="border rounded w-100">
+
+            <div class="col-lg-8 col-md-6">
+                <canvas id="canvas" class="border rounded">
                     <div class="alert alert-danger">your browser does not support javascript. this page will not work.</div>
                 </canvas>
             </div>
