@@ -12,6 +12,7 @@ const fonts = {
 function drawtext() {
     let text = $("#text").val();
     let fg = $("#fg").val();
+    let bg = $("#bg").val();
     let renderButton = $("#render");
 
     const canvas = $("#canvas")[0];
@@ -30,7 +31,6 @@ function drawtext() {
 
     document.fonts.load(`${size}px '${font}'`, text).then(() => {
         ctx.font = `${size}px '${font}'`;
-        ctx.fillStyle = fg;
 
         const lines = text.split("\n");
         const metricsList = lines.map(line => ctx.measureText(line));
@@ -43,6 +43,9 @@ function drawtext() {
 
         canvas.width = Math.ceil(maxWidth + 20);
         canvas.height = Math.ceil(lines.length * lineHeight + 20);
+
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         ctx.font = `${size}px '${font}'`;
         ctx.fillStyle = fg;

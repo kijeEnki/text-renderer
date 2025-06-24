@@ -27,18 +27,12 @@
                                 <textarea autocapitalize="none" autocorrect="off" autocomplete="off" required spellcheck="off" class="form-control" id="text"></textarea>
                             </div>
                             <div class="form-group form-row">
-                                <label for="font" class="col">font</label>
-                                <select class="form-control col" id="font">
+                                <select class="form-control col-8" id="font">
                                     <option>wait for the javascript to load…</option>
                                 </select>
-                            </div>
-                            <div class="form-group form-row">
-                                <label for="fg" class="col">text color</label>
-                                <input type="color" class="form-control col" id="fg">
-                            </div>
-                            <div class="form-group form-row">
-                                <label for="size" class="col">font size</label>
-                                <input type="number" class="form-control col" id="size" value="48">
+                                <input type="color" class="form-control col-1" id="fg" value="#000000">
+                                <input type="color" class="form-control col-1" id="bg" value="#ffffff">
+                                <input type="number" class="form-control col-2" id="size" value="48" placeholder="48">
                             </div>
                         </form>
                         <button class="btn btn-primary" id="render">
@@ -52,6 +46,7 @@
                 <canvas id="canvas" class="border rounded">
                     <div class="alert alert-danger">your browser does not support javascript. this page will not work.</div>
                 </canvas>
+                <p class="lead">to save the resulting image, long-press it (mobile) or right-click it (desktop).</p>
             </div>
         </div>
     </div>
