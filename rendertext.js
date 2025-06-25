@@ -1,4 +1,5 @@
 const fonts = {
+    "your own fonts": null,
     "custom by name": null,
     "custom by url": null,
     "sitelen pona fonts": null,
@@ -7,6 +8,25 @@ const fonts = {
     "andika": "url(fonts/Andika-Regular.ttf)",
     "charis sil": "url(fonts/CharisSIL-Regular.ttf)",
     "doulos sil": "url(fonts/DoulosSIL-Regular.ttf)",
+    "source fonts": null,
+    "source sans": "url(fonts/SourceSans3-Regular.otf)",
+    "source sans (italic)": "url(fonts/SourceSans3-It.otf)",
+    "source sans (bold)": "url(fonts/SourceSans3-Bold.otf)",
+    "source code": "url(fonts/SourceCodePro-Regular.otf)",
+    "source code (bold)": "url(fonts/SourceCodePro-Bold.otf)",
+    "gnu freefonts": null,
+    "freeserif": "url(fonts/FreeSerif.ttf)",
+    "freeserif (italic)": "url(fonts/FreeSerifItalic.ttf)",
+    "freeserif (bold)": "url(fonts/FreeSerifBold.ttf)",
+    "freeserif (italic bold)": "url(fonts/FreeSerifBoldItalic.ttf)",
+    "freesans": "url(fonts/FreeSans.ttf)",
+    "freesans (oblique)": "url(fonts/FreeSansOblique.ttf)",
+    "freesans (bold)": "url(fonts/FreeSansBold.ttf)",
+    "freesans (oblique bold)": "url(fonts/FreeSansBoldOblique.ttf)",
+    "freemono": "url(fonts/FreeMono.ttf)",
+    "freemono (oblique)": "url(fonts/FreeMonoOblique.ttf)",
+    "freemono (bold)": "url(fonts/FreeMonoBold.ttf)",
+    "freemono (oblique bold)": "url(fonts/FreeMonoBoldOblique.ttf)",
     "miscellaneous": null,
     "system font stack": 'local(-apple-system), local(BlinkMacSystemFont), local("Segoe UI"), local(Roboto), local("Helvetica Neue"), local(Arial), local("Noto Sans"), local("Liberation Sans"), local(sans-serif), local("Apple Color Emoji"), local("Segoe UI Emoji"), local("Segoe UI Symbol"), local("Noto Color Emoji")'
 }
@@ -25,12 +45,15 @@ function drawtext() {
     const metricsMode = $("#metricsMode").val();
 
     const hidden = $("#results");
+    const alert = $("#alert");
 
     const canvas = $("#canvas")[0];
     const ctx = canvas.getContext("2d");
 
     const image = $("#image")[0];
     let renderButton = $("#render");
+
+    alert.addClass("d-none");
 
     renderButton.prop("disabled", true);
     renderButton.html(
@@ -42,7 +65,7 @@ function drawtext() {
 
     let fontString = `${size}px "${font}", sans-serif`;
 
-    document.fonts.load(fontString, text).then(() => {
+    document.fonts.load(fontString).then(() => {
         ctx.font = fontString;
 
         const lines = text.split("\n");
@@ -94,7 +117,7 @@ function drawtext() {
     }).catch(error => {
         console.error("error loading font!! here’s more info:");
         console.error(error);
-        alert("can’t load font. try using another one.")
+        alert.removeClass("d-none");
 
         let renderButton = $("#render");
         renderButton.prop("disabled", false);
